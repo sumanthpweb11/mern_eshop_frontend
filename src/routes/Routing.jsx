@@ -4,6 +4,7 @@ import AdminLogin from "../screens/auth/AdminLogin";
 import Categories from "../screens/dashboard/Categories";
 import CreateCategory from "../screens/dashboard/CreateCategory";
 import Products from "../screens/dashboard/Products";
+import UpdateCategory from "../screens/dashboard/UpdateCategory";
 import Private from "./Private";
 import Public from "./Public";
 
@@ -34,10 +35,20 @@ const Routing = () => {
             }
           />
 
-          {/* CATEGORIES ROUTE */}
-
+          {/* CATEGORIES ROUTE  */}
           <Route
             path="categories"
+            element={
+              <Private>
+                <Categories />
+              </Private>
+            }
+          />
+
+          {/* CATEGORIES ROUTE With Page */}
+
+          <Route
+            path="categories/:page"
             element={
               <Private>
                 <Categories />
@@ -52,6 +63,17 @@ const Routing = () => {
             element={
               <Private>
                 <CreateCategory />
+              </Private>
+            }
+          />
+
+          {/*UPDATE CATEGORY  */}
+
+          <Route
+            path="update-category/:id"
+            element={
+              <Private>
+                <UpdateCategory />
               </Private>
             }
           />

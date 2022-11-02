@@ -1,12 +1,12 @@
 import React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuthLoginMutation } from "../../store/services/authService";
 import { setAdminToken } from "../../store/reducers/authReducer";
 import { useDispatch } from "react-redux";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
-  const navigate  = useNavigate()
+  const navigate = useNavigate();
   const [state, setSate] = useState({
     email: "",
     password: "",
@@ -28,19 +28,15 @@ const AdminLogin = () => {
     login(state);
   };
 
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
-
-  useEffect(()=>{
-
-    if(response.isSuccess){
-      localStorage.setItem("admin-token",response?.data?.token)
-      dispatch(setAdminToken(response?.data?.token))
-      navigate("/dashboard/products")
+  useEffect(() => {
+    if (response.isSuccess) {
+      localStorage.setItem("admin-token", response?.data?.token);
+      dispatch(setAdminToken(response?.data?.token));
+      navigate("/dashboard/products");
     }
-
-  },[response.isSuccess])
-
+  }, [response.isSuccess]);
 
   return (
     <div className=" bg-black2 h-screen flex justify-center items-center ">
@@ -56,7 +52,7 @@ const AdminLogin = () => {
           errors.map((error, index) => {
             return (
               <div key={index}>
-                <p className="bg-red-100 text-red-700 p-3 mb-2 rounded-sm text-sm font-medium">{error.msg}</p>
+                <p className="alert-danger">{error.msg}</p>
               </div>
             );
           })}
