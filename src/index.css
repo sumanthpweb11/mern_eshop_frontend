@@ -4,6 +4,8 @@
 @import "./tailwindstyles/form.css";
 @import "tailwindcss/utilities";
 @import "./tailwindstyles/styles.css";
+@import "./tailwindstyles/nav.css";
+@import "./tailwindstyles/header.css";
 
 body {
   margin: 0;

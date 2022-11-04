@@ -1,5 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { TwitterPicker } from "react-color";
 import { v4 as uuidv4 } from "uuid";
 import ReactQuill from "react-quill";
@@ -9,10 +10,12 @@ import Wrapper from "./Wrapper";
 import Colors from "../../components/Colors";
 import ImagesPreview from "../../components/ImagesPreview";
 import Spinner from "../../components/Spinner";
+import { setSuccess } from "../../store/reducers/globalReducer";
 import { useAllCategoriesQuery } from "../../store/services/categoryService";
 import { useCreateProductMutation } from "../../store/services/productService";
 import { useState } from "react";
 import SizesList from "../../components/SizesList";
+import toast, { Toaster } from "react-hot-toast";
 
 const CreateProduct = () => {
   const [state, setState] = useState({
@@ -136,6 +139,25 @@ const CreateProduct = () => {
     createNewProduct(formData);
   };
 
+  // Toast
+  useEffect(() => {
+    if (!response.isSuccess) {
+      response?.error?.data?.errors.map((err) => {
+        toast.error(err.msg);
+      });
+    }
+  }, [response?.error?.data?.errors]);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (response?.isSuccess) {
+      dispatch(setSuccess(response?.data?.msg));
+      navigate("/dashboard/products");
+    }
+  }, [response?.isSuccess]);
+
   console.log(data, isFetching);
   return (
     <Wrapper>
@@ -146,6 +168,8 @@ const CreateProduct = () => {
           </Link>
         </button>
       </ScreenHeader>
+
+      <Toaster position="top-right" reverseOrder={true} />
       <div className="flex flex-wrap -mx-3 ">
         <form onSubmit={createPro} className="w-full xl:w-8/12 p-3 ">
           <div className="flex flex-wrap ">
@@ -327,9 +351,10 @@ const CreateProduct = () => {
 
             <div className="w-full p-3">
               <input
-                className="btn btn-indigo"
+                className="btn btn-indigo cursor-pointer"
                 type="submit"
-                value="Save Product"
+                value={response.isLoading ? "Loading..." : "Save Product"}
+                disabled={response.isLoading ? true : false}
               />
             </div>
           </div>
