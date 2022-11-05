@@ -1,31 +1,34 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../../../components/home/Header";
 import Nav from "../../../components/home/Nav";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { useUserLoginMutation } from "../../../store/services/authService";
 import { useDispatch } from "react-redux";
 import { setUserToken } from "../../../store/reducers/authReducer";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { useUserRegisterMutation } from "../../../store/services/authService";
+import { setSuccess } from "../../../store/reducers/globalReducer";
+import { useEffect } from "react";
 
 import { useForm } from "../../../hooks/Form";
 import { showError } from "../../../utils/ShowError";
 
-const Login = () => {
+const Register = () => {
   const [errors, setErrors] = useState([]);
 
   const { state, onChange } = useForm({
+    name: "",
     email: "",
     password: "",
   });
 
-  const [loginUser, response] = useUserLoginMutation();
+  const [registerUser, response] = useUserRegisterMutation();
 
   console.log(response);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    loginUser(state);
+    registerUser(state);
   };
 
   useEffect(() => {
@@ -41,6 +44,7 @@ const Login = () => {
     if (response.isSuccess) {
       localStorage.setItem("userToken", response?.data?.token);
       dispatch(setUserToken(response?.data?.token));
+      dispatch(setSuccess(response?.data?.msg));
       navigate("/user");
     }
   }, [response.isSuccess]);
@@ -49,7 +53,7 @@ const Login = () => {
     <>
       <Nav />
       <div className=" pb-[80px] ">
-        <Header>Sign In</Header>
+        <Header>Sign up</Header>
 
         <div className="flex flex-wrap justify-center">
           <motion.div
@@ -61,7 +65,29 @@ const Login = () => {
               onSubmit={onSubmit}
               className="bg-white rounded-lg -mt-12 border border-gray-200 p-10  "
             >
-              <h1 className="heading mb-5 ">Sign In</h1>
+              <h1 className="heading mb-5 ">Sign up</h1>
+
+              <div className="mb-4">
+                <label htmlFor="name" className="form-label">
+                  name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className={`form-input ${
+                    showError(errors, "name")
+                      ? "border-rose-600 bg-rose-50"
+                      : "border-gray-300 bg-white"
+                  }`}
+                  placeholder="name..."
+                  value={state.name}
+                  onChange={onChange}
+                />
+                {showError(errors, "name") && (
+                  <span className="error">{showError(errors, "name")}</span>
+                )}
+              </div>
               <div className="mb-4">
                 <label htmlFor="email" className="form-label">
                   email
@@ -70,16 +96,15 @@ const Login = () => {
                   type="email"
                   name="email"
                   id="email"
-                  placeholder="email..."
                   className={`form-input ${
-                    showError(errors, "email")
+                    showError(errors, "name")
                       ? "border-rose-600 bg-rose-50"
                       : "border-gray-300 bg-white"
                   }`}
+                  placeholder="email..."
                   value={state.email}
                   onChange={onChange}
                 />
-
                 {showError(errors, "email") && (
                   <span className="error">{showError(errors, "email")}</span>
                 )}
@@ -103,14 +128,14 @@ const Login = () => {
                   onChange={onChange}
                 />
                 {showError(errors, "password") && (
-                  <span className="error">{showError("password")}</span>
+                  <span className="error">{showError(errors, "password")}</span>
                 )}
               </div>
 
               <div className="mb-4">
                 <input
                   type="submit"
-                  value={`${response.isLoading ? "loading..." : "Sign In"}`}
+                  value={`${response.isLoading ? "loading..." : "Sign Up"}`}
                   className="btn btn-indigo w-full"
                   disabled={response.isLoading ? true : false}
                 />
@@ -118,9 +143,9 @@ const Login = () => {
 
               <div>
                 <p>
-                  Don't have an Account?
+                  Already have an Account?
                   <span className="capitalize font-medium text-base text-black">
-                    <Link to="/register"> Register</Link>
+                    <Link to="/login"> Sign In</Link>
                   </span>
                 </p>
               </div>
@@ -132,4 +157,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

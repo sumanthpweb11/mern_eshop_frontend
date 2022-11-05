@@ -11,6 +11,10 @@ import Private from "./Private";
 import Public from "./Public";
 import Home from "../screens/home/Home";
 import Login from "../screens/home/auth/Login";
+import Register from "../screens/home/auth/Register";
+import Dashboard from "../screens/users/Dashboard";
+import UserRoute from "./UserRoute";
+import UserAuthRoute from "./UserRouteAuth";
 
 const Routing = () => {
   return (
@@ -19,8 +23,20 @@ const Routing = () => {
         {/* Home */}
         <Route path="/" element={<Home />} />
 
-        {/* User Login */}
-        <Route path="/login" element={<Login />} />
+        {/* OUTLET means children of UserRoute */}
+        <Route element={<UserAuthRoute />}>
+          {/* User Register */}
+          <Route path="/register" element={<Register />} />
+
+          {/* User Login */}
+          <Route path="/login" element={<Login />} />
+        </Route>
+
+        {/* OUTLET means children of UserRoute */}
+        <Route element={<UserRoute />}>
+          {/* User Dashboard */}
+          <Route path="user" element={<Dashboard />} />
+        </Route>
 
         {/* auth/admin-login */}
         <Route path="/auth">
