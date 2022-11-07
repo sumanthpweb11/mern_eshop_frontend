@@ -15,6 +15,8 @@ import Register from "../screens/home/auth/Register";
 import Dashboard from "../screens/users/Dashboard";
 import UserRoute from "./UserRoute";
 import UserAuthRoute from "./UserRouteAuth";
+import CatProducts from "../screens/home/CatProducts";
+import ProductDetail from "../screens/home/ProductDetail";
 
 const Routing = () => {
   return (
@@ -22,6 +24,15 @@ const Routing = () => {
       <Routes>
         {/* Home */}
         <Route path="/" element={<Home />} />
+
+        {/*--- Category Products when clicked on Certain Category--- */}
+        <Route path="/cat-products/:name/" element={<CatProducts />} />
+
+        {/*--- Category Products when clicked on Certain Category WITH OPTIONAL PAGINATION I.E PAGE NO PARAM--- */}
+        <Route path="/cat-products/:name/:page" element={<CatProducts />} />
+
+        {/* Product Detail Route */}
+        <Route path="product/:name" element={<ProductDetail />} />
 
         {/* OUTLET means children of UserRoute */}
         <Route element={<UserAuthRoute />}>

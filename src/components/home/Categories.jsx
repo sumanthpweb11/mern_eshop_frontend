@@ -20,7 +20,7 @@ const Categories = () => {
             className="w-6/12 p-4 sm:w-4/12 md:w-3/12 lg:w-[20%] xl:w-2/12  "
           >
             <Skeleton>
-              <Thumbnail />
+              <Thumbnail height="150px" />
             </Skeleton>
           </div>
         );
@@ -73,7 +73,7 @@ const Categories = () => {
               </div>
 
               <Link
-                to="/"
+                to={`/cat-products/${cat.name}`}
                 className="absolute inset-0 w-full h-full bg-black/50 flex items-center justify-center p-4"
               >
                 <h4 className="text-white text-base font-medium capitalize ">

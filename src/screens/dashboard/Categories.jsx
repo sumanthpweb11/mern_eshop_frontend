@@ -11,6 +11,7 @@ import {
 import { BiPlus } from "react-icons/bi";
 import Spinner from "../../components/Spinner";
 import Pagination from "../../components/Pagination";
+import Pagination2 from "../../components/Pagination2";
 
 const Categories = () => {
   let { page } = useParams();
@@ -22,7 +23,7 @@ const Categories = () => {
   const { success } = useSelector((state) => state.globalReducer);
   const dispatch = useDispatch();
 
-  const { data = [], isFetching } = useGetQuery(page);
+  const { data = [], isFetching } = useGetQuery(page ? page : 1);
 
   const [removeCategory, response] = useDeleteCategoryMutation();
 

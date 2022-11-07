@@ -2,13 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { CgArrowLeftR, CgArrowRightR } from "react-icons/cg";
 
-const Pagination = ({ count, perPage, page, path }) => {
+const Pagination = ({ count, perPage, page, path, theme }) => {
   // console.log(typeof page);
 
-  const totalLinks = Math.ceil(count / page);
-  let startLoop = page;
+  const totalLinks = Math.ceil(count / perPage);
+  console.log(totalLinks, "totlalinks"); // 3
+  let startLoop = page; // 1
 
-  let diff = totalLinks - page;
+  let diff = totalLinks - page; // 3-1 = 2
 
   if (diff <= 3) {
     startLoop = totalLinks - 3;
@@ -24,11 +25,11 @@ const Pagination = ({ count, perPage, page, path }) => {
     const allLinks = [];
     for (let i = startLoop; i <= endLoop; i++) {
       allLinks.push(
-        <li key={i}>
+        <li key={i} className="pagination-li">
           <Link
-            className={`pagination-link ${
-              page === i && "bg-gray-500 text-gray-900"
-            }`}
+            className={`${
+              theme === "light" ? "pagination-link-light" : " pagination-link"
+            }  ${page === i && "bg-indigo-500 text-white"}`}
             to={`/${path}/${i}`}
           >
             {i}
@@ -42,8 +43,13 @@ const Pagination = ({ count, perPage, page, path }) => {
   const next = () => {
     if (page < totalLinks) {
       return (
-        <li>
-          <Link className="pagination-link" to={`/${path}/${page + 1}`}>
+        <li className="pagination-li">
+          <Link
+            className={`${
+              theme === "light" ? "pagination-link-light" : "pagination-link"
+            }`}
+            to={`/${path}/${page + 1}`}
+          >
             <CgArrowRightR />
           </Link>
         </li>
@@ -54,8 +60,13 @@ const Pagination = ({ count, perPage, page, path }) => {
   const prev = () => {
     if (page > 1) {
       return (
-        <li>
-          <Link className="pagination-link" to={`/${path}/${page - 1}`}>
+        <li className="pagination-li">
+          <Link
+            className={`${
+              theme === "light" ? "pagination-link-light" : "pagination-link"
+            }`}
+            to={`/${path}/${page - 1}`}
+          >
             <CgArrowLeftR />
           </Link>
         </li>

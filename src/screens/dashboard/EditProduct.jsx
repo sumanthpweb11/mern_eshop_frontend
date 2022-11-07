@@ -19,7 +19,7 @@ import {
 import { useState } from "react";
 import SizesList from "../../components/SizesList";
 import toast, { Toaster } from "react-hot-toast";
-import parser from "html-react-parser";
+import h2p from "html2plaintext";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -137,7 +137,7 @@ const EditProduct = () => {
     if (!fetching) {
       setState(product);
       setSizeList(product.sizes);
-      setValue(product.description);
+      setValue(h2p(product.description));
     }
   }, [product]);
 

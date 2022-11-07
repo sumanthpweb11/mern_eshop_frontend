@@ -31,7 +31,7 @@ const categoryService = createApi({
       get: builder.query({
         query: (page) => {
           return {
-            url: `categories/:${page}`,
+            url: `categories/${page}`,
             method: "GET",
           };
         },

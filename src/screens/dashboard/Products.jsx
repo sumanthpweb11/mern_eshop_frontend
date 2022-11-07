@@ -13,6 +13,7 @@ import toast, { Toaster } from "react-hot-toast";
 // import AdminLogin from "../auth/AdminLogin";
 import Wrapper from "./Wrapper";
 import Pagination from "../../components/Pagination";
+import Pagination2 from "../../components/Pagination2";
 
 const Products = () => {
   let { page } = useParams();
