@@ -2,16 +2,17 @@ import React from "react";
 import Nav from "../../components/home/Nav";
 import Header from "../../components/home/Header";
 import { useParams } from "react-router-dom";
-import { useCatProductsQuery } from "../../store/services/HomeProducts";
 import ProductCard from "../../components/home/ProductCard";
 import Pagination from "../../components/Pagination";
 import ProductSkeleton from "../../components/home/ProductSkeleton";
 
-const CatProducts = () => {
-  const { name, page = 1 } = useParams();
+import { useSearchProductsQuery } from "../../store/services/HomeProducts";
 
-  const { data, isFetching } = useCatProductsQuery({
-    name,
+const SearchProducts = () => {
+  const { keyword, page = 1 } = useParams();
+
+  const { data, isFetching } = useSearchProductsQuery({
+    keyword,
     page: parseInt(page),
   });
 
@@ -20,7 +21,7 @@ const CatProducts = () => {
     <>
       <Nav />
       <div className="">
-        <Header>#{name}</Header>
+        <Header>#{keyword}</Header>
       </div>
 
       <div className="my-container my-10 ">
@@ -29,7 +30,7 @@ const CatProducts = () => {
         ) : data.count > 0 ? (
           <>
             <p className="text-base font-medium text-gray-700 flex justify-center items-center ">
-              {data.count} products found in #{name} category
+              {data.count} products found in #{keyword} category
             </p>
             <div className="flex flex-wrap -mx-5 justify-center items-center ">
               {data.products.map((product) => {
@@ -40,13 +41,13 @@ const CatProducts = () => {
               page={parseInt(page)}
               perPage={data.perPage}
               count={data.count}
-              path={`cat-products/${name}`}
+              path={`search-products/${keyword}`}
               theme="light"
             />
           </>
         ) : (
           <p className="text-base font-medium text-gray-700 flex justify-center items-center">
-            No Products found in #{name} category
+            No Products found in #{keyword} category
           </p>
         )}
       </div>
@@ -54,4 +55,4 @@ const CatProducts = () => {
   );
 };
 
-export default CatProducts;
+export default SearchProducts;

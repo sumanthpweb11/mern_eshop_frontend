@@ -4,6 +4,7 @@ import Nav from "../../components/home/Nav";
 import { BsArrowRightShort } from "react-icons/bs";
 import { useGetProductQuery } from "../../store/services/productService";
 import ProductDetailsCard from "../../components/home/ProductDetailsCard";
+import ProductLoader from "../../components/home/ProductLoader";
 
 const ProductDetail = () => {
   const { name } = useParams();
@@ -13,7 +14,7 @@ const ProductDetail = () => {
       <Nav />
       <div className="my-container mt-6">
         {isFetching ? (
-          "loading..."
+          <ProductLoader />
         ) : (
           // BreadCrummbs
           <>

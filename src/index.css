@@ -6,7 +6,7 @@
 @import "./tailwindstyles/styles.css";
 @import "./tailwindstyles/nav.css";
 @import "./tailwindstyles/header.css";
-
+@import "./tailwindstyles/table.css";
 body {
   margin: 0;
   padding: 0;

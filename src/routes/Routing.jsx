@@ -17,6 +17,8 @@ import UserRoute from "./UserRoute";
 import UserAuthRoute from "./UserRouteAuth";
 import CatProducts from "../screens/home/CatProducts";
 import ProductDetail from "../screens/home/ProductDetail";
+import SearchProducts from "../screens/home/SearchProducts";
+import Cart from "../screens/home/Cart";
 
 const Routing = () => {
   return (
@@ -26,10 +28,21 @@ const Routing = () => {
         <Route path="/" element={<Home />} />
 
         {/*--- Category Products when clicked on Certain Category--- */}
-        <Route path="/cat-products/:name/" element={<CatProducts />} />
+        <Route path="cat-products/:name/" element={<CatProducts />} />
 
         {/*--- Category Products when clicked on Certain Category WITH OPTIONAL PAGINATION I.E PAGE NO PARAM--- */}
-        <Route path="/cat-products/:name/:page" element={<CatProducts />} />
+        <Route path="cat-products/:name/:page" element={<CatProducts />} />
+
+        {/*SEARCH PRODUCTS */}
+
+        <Route
+          path="search-products/:keyword/:page"
+          element={<SearchProducts />}
+        />
+
+        {/*CART */}
+
+        <Route path="cart" element={<Cart />} />
 
         {/* Product Detail Route */}
         <Route path="product/:name" element={<ProductDetail />} />

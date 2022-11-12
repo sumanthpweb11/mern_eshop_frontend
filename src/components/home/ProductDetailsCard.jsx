@@ -1,43 +1,100 @@
 import React from "react";
 import currencyFormatter from "currency-formatter";
 import h2p from "html2plaintext";
+// import htmlFormat from "html-to-formatted-text";
+import htmlParser from "html-react-parser";
+import ProductDetailsImage from "./ProductDetailsImage";
+import Quantity from "./Quantity";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { BsCheck2 } from "react-icons/bs";
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { addCart } from "../../store/reducers/cartReducer";
+import { discount } from "../../utils/Discount";
 
 const ProductDetailsCard = ({ product }) => {
-  const percentage = product.discount / 100;
-  const discountPrice = product.price - product.price * percentage;
+  const [sizeState, setSizeState] = useState(
+    product?.sizes?.length > 0 && product.sizes[0].name
+  );
+
+  const [colorsState, setColorsState] = useState(
+    product?.colors?.length > 0 && product.colors[0].color
+  );
+
+  const [quantity, setQuantity] = useState(1);
+
+  const inc = () => {
+    setQuantity((prev) => {
+      return prev + 1;
+    });
+  };
+
+  const dec = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => {
+        return prev - 1;
+      });
+    }
+  };
+
+  const dispatch = useDispatch();
+  const addToCart = () => {
+    const {
+      ["colors"]: colors,
+      ["sizes"]: sizes,
+      ["createdAt"]: createdAt,
+      ["updatedAt"]: updatedAt,
+      ...newProduct
+    } = product;
+
+    newProduct["size"] = sizeState;
+    newProduct["color"] = colorsState;
+    newProduct["quantity"] = quantity;
+
+    const cart = localStorage.getItem("cart");
+    const cartItems = cart ? JSON.parse(cart) : [];
+
+    const checkItem = cartItems.find((item) => item._id === newProduct._id);
+
+    if (!checkItem) {
+      dispatch(addCart(newProduct));
+      cartItems.push(newProduct);
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    } else {
+      toast.error(`${newProduct.title} is already in Cart`);
+      return;
+    }
+
+    // console.log(newProduct);
+  };
+
+  // DISCOUNT PRICE FUNCTION UTIL
+
+  const discountPrice = discount(product.price, product.discount);
+
+  let desc = h2p(product.description);
+  desc = htmlParser(desc);
   return (
-    <div className="flex flex-wrap -mx-5">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-wrap -mx-5"
+    >
+      <Toaster />
       {/* Product Images Column */}
-      <div className="w-full sm:w-6/12 p-5">
+      <div className="w-full order-2 md:order-1 md:w-6/12 p-5">
         <div className="flex flex-wrap -mx-1">
-          <div className="w-full sm:w-6/12 p-1">
-            <img
-              className="w-full h-auto object-cover"
-              src={`/images/${product.image1}`}
-              alt="image1"
-            />
-          </div>
+          <ProductDetailsImage image={product.image1} />
 
-          <div className="w-full sm:w-6/12 p-1">
-            <img
-              className="w-full h-auto object-cover"
-              src={`/images/${product.image2}`}
-              alt="image2"
-            />
-          </div>
+          <ProductDetailsImage image={product.image2} />
 
-          <div className="w-full sm:w-6/12 p-1">
-            <img
-              className="w-full h-auto object-cover"
-              src={`/images/${product.image3}`}
-              alt="image3"
-            />
-          </div>
+          <ProductDetailsImage image={product.image3} />
         </div>
       </div>
 
       {/* Product Details Column */}
-      <div className="w-full sm:w-6/12 p-5">
+      <div className="w-full order-1 md:order-2 md:w-6/12 p-5">
         <h1 className="text-2xl font-bold text-gray-900 capitalize">
           {[product.title]}
         </h1>
@@ -65,10 +122,22 @@ const ProductDetailsCard = ({ product }) => {
               {product.sizes.map((size) => {
                 return (
                   <div
+                    onClick={() => setSizeState(size.name)}
                     key={size.name}
-                    className="p-2 mx-1 border border-gray-300 rounded cursor-pointer"
+                    className={`first-letter:p-2 mx-1 border border-gray-300 rounded cursor-pointer ${
+                      sizeState === size.name && "bg-indigo-600"
+                    }  `}
                   >
-                    <span className="text-sm font-semibold uppercase text-gray-900">
+                    <span
+                      className={`text-sm font-semibold uppercase text-gray-900
+                       ${
+                         sizeState === size.name
+                           ? "text-white"
+                           : "text-gray-900"
+                       }
+                    
+                     `}
+                    >
                       {size.name}
                     </span>
                   </div>
@@ -90,12 +159,17 @@ const ProductDetailsCard = ({ product }) => {
                 return (
                   <div
                     key={color.color}
+                    onClick={() => setColorsState(color.color)}
                     className="border border-gray-300 rounded m-1 p-1 cursor-pointer "
                   >
                     <span
-                      className="rounded w-10 h-10 border block  "
+                      className="rounded w-10 h-10 border flex items-center justify-center  "
                       style={{ backgroundColor: color.color }}
-                    ></span>
+                    >
+                      {colorsState === color.color && (
+                        <BsCheck2 className="text-white" size={20} />
+                      )}
+                    </span>
                   </div>
                 );
               })}
@@ -103,13 +177,26 @@ const ProductDetailsCard = ({ product }) => {
           </>
         )}
 
+        {/* DISPLAY QUANTITY  */}
+        <div className="flex -mx-3 items-center">
+          <div className="w-full sm:w-6/12 p-3">
+            <Quantity quantity={quantity} inc={inc} dec={dec} />
+          </div>
+
+          <div className="w-full sm:w-6/12 p-3">
+            <button onClick={addToCart} className="btn btn-indigo">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
         {/* DISPLAY DESCRIPTION  */}
         <h3 className="text-base font-medium capitalize text-gray-600 mb-2 mt-3">
           Description
         </h3>
-        <p>{h2p(product.description)}</p>
+        <div className="mt-4 leading-[27px] description">{desc}</div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
